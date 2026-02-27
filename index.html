@@ -1,217 +1,275 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Compass, 
-  Sparkles, 
-  Users, 
-  ArrowRight, 
   Heart, 
-  Share2, 
-  Calendar, 
+  Briefcase, 
+  Compass, 
+  Bookmark, 
+  ChevronRight, 
   CheckCircle2, 
-  Menu, 
-  X 
+  ArrowRight,
+  Bell,
+  Calendar,
+  Users
 } from 'lucide-react';
 
-/**
- * SOLMAE MVP PROTOTYPE
- * High-end, mobile-optimized experience for curated wellness and leadership.
- */
-
 const App = () => {
-  const [isSubscribed, setIsSubscribed] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('health');
+  const [bookmarked, setBookmarked] = useState([]);
+  const [hasVoted, setHasVoted] = useState(false);
+  const [rsvpStatus, setRsvpStatus] = useState({});
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
 
-  const handleSignup = (e) => {
-    if (e) e.preventDefault();
-    setIsSubscribed(true);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+  // Mock Content
+  const content = {
+    health: [
+      {
+        id: 'h1',
+        expert: 'Dr. Sarah Chen',
+        title: 'The Perimenopause Protocol',
+        summary: '3 biohacks to stabilize cortisol levels during mid-life transitions.',
+        readTime: '4 min',
+        category: 'Biohacking'
+      },
+      {
+        id: 'h2',
+        expert: 'Elena Rodriguez',
+        title: 'Sleep as a High-Performance Asset',
+        summary: 'Why non-linear sleep cycles are the key to cognitive longevity.',
+        readTime: '6 min',
+        category: 'Wellness'
+      }
+    ],
+    work: [
+      {
+        id: 'w1',
+        expert: 'Marcus Thorne',
+        title: 'Beyond Resilience',
+        summary: 'Moving from "gritting it out" to sustainable leadership systems.',
+        readTime: '5 min',
+        category: 'Leadership'
+      },
+      {
+        id: 'w2',
+        expert: 'Sia Williams',
+        title: 'The Burnout Audit',
+        summary: 'A 10-minute framework to identify hidden energy leaks in your team.',
+        readTime: '3 min',
+        category: 'Efficiency'
+      }
+    ],
+    life: [
+      {
+        id: 'l1',
+        expert: 'Solmae Curators',
+        title: 'The Big Sur Reset',
+        summary: 'An exclusive look at our Spring 2026 Leadership Retreat itinerary.',
+        readTime: '2 min',
+        category: 'Retreats'
+      }
+    ]
   };
 
-  const experts = [
-    {
-      name: "Dr. Elena Rossi",
-      title: "Hormones & High Performance",
-      category: "Biology",
-      readTime: "4 min read",
-      excerpt: "The cortisol-productivity loop for the modern executive. How perimenopause changes the leadership landscape.",
-      image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800"
-    },
-    {
-      name: "Sienna Rivers",
-      title: "The Silent Strategy of Breath",
-      category: "Mindset",
-      readTime: "6 min read",
-      excerpt: "Mastering boardroom presence using physiological sighs. Why stillness is the ultimate power move.",
-      image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800"
-    }
+  const events = [
+    { id: 'e1', title: 'Coffee & Yoga: Mill Valley', date: 'Oct 12', time: '8:30 AM' },
+    { id: 'e2', title: 'Leadership Circle: Virtual', date: 'Oct 15', time: '12:00 PM' }
   ];
 
-  const selections = [
-    { name: "Ashwagandha Complex", brand: "Moon Juice", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400" },
-    { name: "Silk Sleep Mask", brand: "Lunya", image: "https://images.unsplash.com/photo-1583073037411-9669528f804e?auto=format&fit=crop&q=80&w=400" },
-    { name: "Ceremonial Matcha", brand: "Ippodo", image: "https://images.unsplash.com/photo-1582733315331-a941f515a1ec?auto=format&fit=crop&q=80&w=400" }
-  ];
+  const toggleBookmark = (id) => {
+    setBookmarked(prev => prev.includes(id) ? prev.filter(b => b !== id) : [...prev, id]);
+  };
+
+  const handleRSVP = (id) => {
+    setRsvpStatus(prev => ({ ...prev, [id]: true }));
+  };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-stone-900 overflow-x-hidden pb-24 selection:bg-stone-200">
-      
-      {/* NAVIGATION */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-stone-100">
-        <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
-          <h1 className="text-xl font-serif tracking-tight text-stone-800 font-bold uppercase">SOLMAE</h1>
-          <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-stone-500">
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+    <div className="min-h-screen bg-stone-50 text-stone-900 font-sans pb-20 select-none max-w-md mx-auto shadow-2xl border-x border-stone-200">
+      {/* Header */}
+      <header className="sticky top-0 bg-white/80 backdrop-blur-md z-30 px-6 py-4 border-b border-stone-100 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-serif tracking-tight font-bold text-stone-800">SOLMAE</h1>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-semibold">Leadership & Wellness</p>
         </div>
-      </nav>
+        <button className="p-2 relative">
+          <Bell className="w-5 h-5 text-stone-600" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+        </button>
+      </header>
 
-      {/* MENU OVERLAY */}
-      {menuOpen && (
-        <div className="fixed inset-0 bg-stone-900/98 z-[60] flex flex-col items-center justify-center text-stone-50 gap-8 animate-in fade-in fill-mode-forwards">
-           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 p-2"><X size={32} /></button>
-           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Journal</a>
-           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Experiences</a>
-           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Collective</a>
-           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Curated Shop</a>
-        </div>
-      )}
-
-      <main className="max-w-md mx-auto">
-        
-        {/* HERO SECTION */}
-        <section className="pt-28 pb-12 px-6 bg-stone-50">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/50 text-stone-600 text-[10px] font-bold tracking-widest uppercase mb-4">
-            <Sparkles size={12} />
-            <span>Private Beta</span>
+      {/* Hero / Poll Section */}
+      <section className="px-6 py-8">
+        <div className="bg-stone-900 rounded-3xl p-6 text-white overflow-hidden relative shadow-xl">
+          <div className="relative z-10">
+            <h2 className="text-xl font-serif mb-2">Weekly Signal</h2>
+            <p className="text-stone-400 text-sm mb-4">What is your primary focus this week?</p>
+            
+            {!hasVoted ? (
+              <div className="space-y-2">
+                {['Managing Burnout', 'Hormonal Health', 'Scaling Impact'].map((option) => (
+                  <button 
+                    key={option}
+                    onClick={() => setHasVoted(true)}
+                    className="w-full text-left px-4 py-3 rounded-xl border border-stone-700 bg-stone-800/50 hover:bg-stone-700 transition-colors text-sm"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-stone-800 p-4 rounded-xl">
+                <p className="text-stone-300 text-sm flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  Thanks! You're aligned with 42% of our community.
+                </p>
+              </div>
+            )}
           </div>
-          <h2 className="text-4xl font-serif text-stone-900 leading-[1.15] mb-4">
-            The Modern Woman’s <br /><span className="italic text-stone-500 font-normal">Guide to Presence.</span>
-          </h2>
-          <p className="text-stone-600 text-lg leading-relaxed mb-8 font-light">
-            Curated wisdom, elite community, and the science of wellness—tailored for leaders.
-          </p>
-          <button 
-            onClick={handleSignup}
-            className="w-full bg-stone-900 text-stone-50 py-4 rounded-xl font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-stone-200"
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 bg-stone-700 rounded-full blur-3xl opacity-20"></div>
+        </div>
+      </section>
+
+      {/* Tabs */}
+      <div className="px-6 flex gap-8 border-b border-stone-200 mb-6 overflow-x-auto no-scrollbar">
+        {[
+          { id: 'health', icon: Heart, label: 'Health' },
+          { id: 'work', icon: Briefcase, label: 'Work' },
+          { id: 'life', icon: Compass, label: 'Life' }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 pb-3 whitespace-nowrap transition-all border-b-2 text-sm font-medium ${
+              activeTab === tab.id 
+              ? 'border-stone-900 text-stone-900' 
+              : 'border-transparent text-stone-400'
+            }`}
           >
-            Join the Inner Circle <ArrowRight size={18} />
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
           </button>
-        </section>
-
-        {/* HORIZONTAL SELECTION */}
-        <section className="py-12 pl-6 overflow-hidden">
-          <div className="pr-6 flex items-center justify-between mb-6">
-            <h3 className="text-xl font-serif font-semibold">The Selection</h3>
-            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">Weekly Edit</span>
-          </div>
-          <div className="flex gap-4 overflow-x-auto pr-6 pb-4 no-scrollbar">
-            {selections.map((item, i) => (
-              <div key={i} className="flex-shrink-0 w-64 bg-white border border-stone-100 rounded-2xl p-4 shadow-sm">
-                <div className="aspect-square bg-stone-50 rounded-xl mb-4 overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                </div>
-                <h5 className="font-semibold text-stone-800 text-sm mb-1">{item.name}</h5>
-                <p className="text-stone-400 text-xs mb-4 uppercase tracking-tighter">{item.brand}</p>
-                <button className="w-full py-2.5 bg-stone-50 text-stone-900 text-[11px] font-bold rounded-lg border border-stone-200 uppercase tracking-widest">
-                  View Detail
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* EXPERT FEED */}
-        <section className="py-12 px-6">
-          <h3 className="text-xl font-serif font-semibold text-stone-900 mb-8">Expert Spotlight</h3>
-          <div className="flex flex-col gap-12">
-            {experts.map((expert, idx) => (
-              <div key={idx} className="flex flex-col gap-4">
-                <div className="aspect-[16/10] bg-stone-200 rounded-2xl overflow-hidden relative">
-                  <img src={expert.image} alt={expert.name} className="w-full h-full object-cover" />
-                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
-                    {expert.category}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="text-xl font-serif font-semibold text-stone-800 mb-1">{expert.title}</h4>
-                  <p className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">by {expert.name} • {expert.readTime}</p>
-                  <p className="text-stone-600 text-sm leading-relaxed mb-4 font-light">{expert.excerpt}</p>
-                  <div className="flex gap-6 text-stone-400">
-                    <div className="flex items-center gap-1.5 font-medium">
-                      <Heart size={18} /> <span className="text-xs">4.2k</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 font-medium">
-                      <Share2 size={18} /> <span className="text-xs">Share</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* RETREAT RSVP */}
-        <section className="px-6 mb-12">
-          <div className="bg-stone-900 rounded-[2.5rem] p-8 text-stone-50 relative overflow-hidden shadow-2xl shadow-stone-400">
-            <div className="relative z-10">
-              <Calendar size={20} className="text-stone-500 mb-4" />
-              <h3 className="text-2xl font-serif font-bold mb-3">Sonoma: The Clarity Retreat</h3>
-              <p className="text-stone-400 text-sm mb-8 leading-relaxed font-light">
-                An intimate 3-day immersion for female founders. Bio-optimization and terroir-based wellness.
-              </p>
-              <button onClick={handleSignup} className="w-full py-4 bg-white text-stone-900 rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform">
-                Join Waitlist
-              </button>
-            </div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-stone-800 rounded-full -mr-32 -mt-32 opacity-40 blur-[80px]"></div>
-          </div>
-        </section>
-
-        {/* FOOTER */}
-        <footer className="py-20 px-8 bg-stone-50 text-center border-t border-stone-200">
-          <h2 className="text-3xl font-serif mb-6 italic">Solmae</h2>
-          <p className="text-stone-500 text-sm mb-10 font-light">Building a legacy of presence.</p>
-          {!isSubscribed ? (
-            <button onClick={handleSignup} className="px-10 py-4 bg-stone-900 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-stone-300">
-              Apply for Access
-            </button>
-          ) : (
-            <p className="text-emerald-600 font-serif italic tracking-wide animate-in fade-in">Thank you. We'll be in touch.</p>
-          )}
-          <p className="mt-16 text-[9px] text-stone-400 tracking-[0.3em] uppercase font-bold">SOLMAE ENTERPRISES © 2024</p>
-        </footer>
-      </main>
-
-      {/* BOTTOM NAV */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/95 backdrop-blur-xl border border-white/10 px-10 py-4 rounded-full shadow-2xl flex gap-12 text-stone-500 z-50">
-        <button className="text-white"><Compass size={24} /></button>
-        <button className="hover:text-stone-300 transition-colors"><Sparkles size={24} /></button>
-        <button className="hover:text-stone-300 transition-colors"><Users size={24} /></button>
+        ))}
       </div>
 
-      {/* TOAST */}
-      {showToast && (
-        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-[100] animate-in slide-in-from-bottom-4">
-          <CheckCircle2 size={18} className="text-emerald-400" />
-          <span className="text-sm font-medium tracking-wide">Reserved. Welcome to Solmae.</span>
+      {/* Expert Feed */}
+      <section className="px-6 space-y-6">
+        <div className="flex justify-between items-end">
+          <h3 className="text-lg font-serif italic text-stone-700 uppercase tracking-wider text-xs">Expert Curations</h3>
+          <span className="text-xs text-stone-400">Fresh Today</span>
         </div>
-      )}
-
-      {/* GLOBAL STYLES */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
         
-        .font-serif { font-family: 'Playfair Display', serif; }
+        {content[activeTab].map((item) => (
+          <div key={item.id} className="bg-white rounded-2xl p-5 shadow-sm border border-stone-100 group">
+            <div className="flex justify-between items-start mb-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 py-1 px-2 bg-stone-50 rounded-md">
+                {item.category}
+              </span>
+              <button onClick={() => toggleBookmark(item.id)}>
+                <Bookmark className={`w-5 h-5 transition-colors ${bookmarked.includes(item.id) ? 'fill-stone-900 text-stone-900' : 'text-stone-300'}`} />
+              </button>
+            </div>
+            <h4 className="text-lg font-semibold mb-1 group-active:text-stone-500 transition-colors">{item.title}</h4>
+            <p className="text-stone-500 text-sm mb-4 leading-relaxed">{item.summary}</p>
+            <div className="flex justify-between items-center pt-4 border-t border-stone-50">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-[10px] font-bold">
+                  {item.expert.split(' ').map(n => n[0]).join('')}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-stone-800">{item.expert}</p>
+                  <p className="text-[10px] text-stone-400">{item.readTime} read</p>
+                </div>
+              </div>
+              <button className="p-2 bg-stone-50 rounded-full group-active:translate-x-1 transition-transform">
+                <ArrowRight className="w-4 h-4 text-stone-400" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* Events Section */}
+      <section className="px-6 py-10">
+        <div className="flex items-center gap-2 mb-4">
+          <Calendar className="w-4 h-4 text-rose-500" />
+          <h3 className="text-sm font-bold uppercase tracking-widest text-stone-600">Local Signal Pilots</h3>
+        </div>
+        <div className="space-y-3">
+          {events.map((event) => (
+            <div key={event.id} className="flex items-center justify-between p-4 bg-stone-100 rounded-2xl">
+              <div>
+                <p className="text-xs font-bold text-stone-400 uppercase tracking-tighter">{event.date} • {event.time}</p>
+                <h4 className="text-sm font-semibold">{event.title}</h4>
+              </div>
+              <button 
+                onClick={() => handleRSVP(event.id)}
+                disabled={rsvpStatus[event.id]}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  rsvpStatus[event.id] 
+                  ? 'bg-emerald-100 text-emerald-700' 
+                  : 'bg-stone-900 text-white shadow-lg active:scale-95'
+                }`}
+              >
+                {rsvpStatus[event.id] ? 'RSVP\'d' : 'Waitlist'}
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Newsletter / Shortlist */}
+      <section className="mx-6 p-8 bg-stone-200 rounded-[2.5rem] text-center mb-10">
+        {!subscribed ? (
+          <>
+            <h3 className="text-xl font-serif mb-2">The Solmae Shortlist</h3>
+            <p className="text-sm text-stone-600 mb-6">Weekly executive-level summaries of wellness tech and leadership insights.</p>
+            <div className="space-y-3">
+              <input 
+                type="email" 
+                placeholder="Work email"
+                className="w-full px-4 py-4 rounded-2xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-stone-400 transition-all shadow-inner"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button 
+                onClick={() => setSubscribed(true)}
+                className="w-full py-4 rounded-2xl bg-stone-900 text-white font-bold text-sm shadow-xl active:scale-[0.98] transition-all"
+              >
+                Join the Network
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="py-4">
+            <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="text-white w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-serif mb-2">Welcome, Leader.</h3>
+            <p className="text-sm text-stone-600">You've been added to the Shortlist.</p>
+          </div>
+        )}
+      </section>
+
+      {/* Bottom Nav */}
+      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-stone-100 px-8 py-4 flex justify-between items-center z-40">
+        <button className="flex flex-col items-center gap-1 text-stone-900">
+          <Heart className="w-6 h-6" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Feed</span>
+        </button>
+        <button className="flex flex-col items-center gap-1 text-stone-300">
+          <Users className="w-6 h-6" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Circles</span>
+        </button>
+        <button className="flex flex-col items-center gap-1 text-stone-300">
+          <Bookmark className="w-6 h-6" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Saves</span>
+        </button>
+      </nav>
+
+      {/* Global CSS for hiding scrollbars */}
+      <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        @keyframes fade-in { 
-          from { opacity: 0; transform: translateY(10px); } 
-          to { opacity: 1; transform: translateY(0); } 
-        }
-        .animate-in { animation: fade-in 0.5s ease-out forwards; }
       `}</style>
     </div>
   );
