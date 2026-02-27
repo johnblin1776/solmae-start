@@ -1,241 +1,220 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solmae | The Modern Woman’s Guide to Presence</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- React & Babel for In-Browser Rendering -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+import React, { useState, useEffect } from 'react';
+import { 
+  Compass, 
+  Sparkles, 
+  Users, 
+  ArrowRight, 
+  Heart, 
+  Share2, 
+  Calendar, 
+  CheckCircle2, 
+  Menu, 
+  X 
+} from 'lucide-react';
 
-    <style>
-        body { font-family: 'Inter', sans-serif; }
+/**
+ * SOLMAE MVP PROTOTYPE
+ * High-end, mobile-optimized experience for curated wellness and leadership.
+ */
+
+const App = () => {
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleSignup = (e) => {
+    if (e) e.preventDefault();
+    setIsSubscribed(true);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  const experts = [
+    {
+      name: "Dr. Elena Rossi",
+      title: "Hormones & High Performance",
+      category: "Biology",
+      readTime: "4 min read",
+      excerpt: "The cortisol-productivity loop for the modern executive. How perimenopause changes the leadership landscape.",
+      image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800"
+    },
+    {
+      name: "Sienna Rivers",
+      title: "The Silent Strategy of Breath",
+      category: "Mindset",
+      readTime: "6 min read",
+      excerpt: "Mastering boardroom presence using physiological sighs. Why stillness is the ultimate power move.",
+      image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800"
+    }
+  ];
+
+  const selections = [
+    { name: "Ashwagandha Complex", brand: "Moon Juice", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400" },
+    { name: "Silk Sleep Mask", brand: "Lunya", image: "https://images.unsplash.com/photo-1583073037411-9669528f804e?auto=format&fit=crop&q=80&w=400" },
+    { name: "Ceremonial Matcha", brand: "Ippodo", image: "https://images.unsplash.com/photo-1582733315331-a941f515a1ec?auto=format&fit=crop&q=80&w=400" }
+  ];
+
+  return (
+    <div className="min-h-screen bg-white font-sans text-stone-900 overflow-x-hidden pb-24 selection:bg-stone-200">
+      
+      {/* NAVIGATION */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-stone-100">
+        <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
+          <h1 className="text-xl font-serif tracking-tight text-stone-800 font-bold uppercase">SOLMAE</h1>
+          <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-stone-500">
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* MENU OVERLAY */}
+      {menuOpen && (
+        <div className="fixed inset-0 bg-stone-900/98 z-[60] flex flex-col items-center justify-center text-stone-50 gap-8 animate-in fade-in fill-mode-forwards">
+           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 p-2"><X size={32} /></button>
+           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Journal</a>
+           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Experiences</a>
+           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Collective</a>
+           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Curated Shop</a>
+        </div>
+      )}
+
+      <main className="max-w-md mx-auto">
+        
+        {/* HERO SECTION */}
+        <section className="pt-28 pb-12 px-6 bg-stone-50">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/50 text-stone-600 text-[10px] font-bold tracking-widest uppercase mb-4">
+            <Sparkles size={12} />
+            <span>Private Beta</span>
+          </div>
+          <h2 className="text-4xl font-serif text-stone-900 leading-[1.15] mb-4">
+            The Modern Woman’s <br /><span className="italic text-stone-500 font-normal">Guide to Presence.</span>
+          </h2>
+          <p className="text-stone-600 text-lg leading-relaxed mb-8 font-light">
+            Curated wisdom, elite community, and the science of wellness—tailored for leaders.
+          </p>
+          <button 
+            onClick={handleSignup}
+            className="w-full bg-stone-900 text-stone-50 py-4 rounded-xl font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-stone-200"
+          >
+            Join the Inner Circle <ArrowRight size={18} />
+          </button>
+        </section>
+
+        {/* HORIZONTAL SELECTION */}
+        <section className="py-12 pl-6 overflow-hidden">
+          <div className="pr-6 flex items-center justify-between mb-6">
+            <h3 className="text-xl font-serif font-semibold">The Selection</h3>
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">Weekly Edit</span>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pr-6 pb-4 no-scrollbar">
+            {selections.map((item, i) => (
+              <div key={i} className="flex-shrink-0 w-64 bg-white border border-stone-100 rounded-2xl p-4 shadow-sm">
+                <div className="aspect-square bg-stone-50 rounded-xl mb-4 overflow-hidden">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                </div>
+                <h5 className="font-semibold text-stone-800 text-sm mb-1">{item.name}</h5>
+                <p className="text-stone-400 text-xs mb-4 uppercase tracking-tighter">{item.brand}</p>
+                <button className="w-full py-2.5 bg-stone-50 text-stone-900 text-[11px] font-bold rounded-lg border border-stone-200 uppercase tracking-widest">
+                  View Detail
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* EXPERT FEED */}
+        <section className="py-12 px-6">
+          <h3 className="text-xl font-serif font-semibold text-stone-900 mb-8">Expert Spotlight</h3>
+          <div className="flex flex-col gap-12">
+            {experts.map((expert, idx) => (
+              <div key={idx} className="flex flex-col gap-4">
+                <div className="aspect-[16/10] bg-stone-200 rounded-2xl overflow-hidden relative">
+                  <img src={expert.image} alt={expert.name} className="w-full h-full object-cover" />
+                  <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
+                    {expert.category}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="text-xl font-serif font-semibold text-stone-800 mb-1">{expert.title}</h4>
+                  <p className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">by {expert.name} • {expert.readTime}</p>
+                  <p className="text-stone-600 text-sm leading-relaxed mb-4 font-light">{expert.excerpt}</p>
+                  <div className="flex gap-6 text-stone-400">
+                    <div className="flex items-center gap-1.5 font-medium">
+                      <Heart size={18} /> <span className="text-xs">4.2k</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 font-medium">
+                      <Share2 size={18} /> <span className="text-xs">Share</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* RETREAT RSVP */}
+        <section className="px-6 mb-12">
+          <div className="bg-stone-900 rounded-[2.5rem] p-8 text-stone-50 relative overflow-hidden shadow-2xl shadow-stone-400">
+            <div className="relative z-10">
+              <Calendar size={20} className="text-stone-500 mb-4" />
+              <h3 className="text-2xl font-serif font-bold mb-3">Sonoma: The Clarity Retreat</h3>
+              <p className="text-stone-400 text-sm mb-8 leading-relaxed font-light">
+                An intimate 3-day immersion for female founders. Bio-optimization and terroir-based wellness.
+              </p>
+              <button onClick={handleSignup} className="w-full py-4 bg-white text-stone-900 rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform">
+                Join Waitlist
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-stone-800 rounded-full -mr-32 -mt-32 opacity-40 blur-[80px]"></div>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="py-20 px-8 bg-stone-50 text-center border-t border-stone-200">
+          <h2 className="text-3xl font-serif mb-6 italic">Solmae</h2>
+          <p className="text-stone-500 text-sm mb-10 font-light">Building a legacy of presence.</p>
+          {!isSubscribed ? (
+            <button onClick={handleSignup} className="px-10 py-4 bg-stone-900 text-white rounded-full text-xs font-bold uppercase tracking-widest shadow-lg shadow-stone-300">
+              Apply for Access
+            </button>
+          ) : (
+            <p className="text-emerald-600 font-serif italic tracking-wide animate-in fade-in">Thank you. We'll be in touch.</p>
+          )}
+          <p className="mt-16 text-[9px] text-stone-400 tracking-[0.3em] uppercase font-bold">SOLMAE ENTERPRISES © 2024</p>
+        </footer>
+      </main>
+
+      {/* BOTTOM NAV */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/95 backdrop-blur-xl border border-white/10 px-10 py-4 rounded-full shadow-2xl flex gap-12 text-stone-500 z-50">
+        <button className="text-white"><Compass size={24} /></button>
+        <button className="hover:text-stone-300 transition-colors"><Sparkles size={24} /></button>
+        <button className="hover:text-stone-300 transition-colors"><Users size={24} /></button>
+      </div>
+
+      {/* TOAST */}
+      {showToast && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-[100] animate-in slide-in-from-bottom-4">
+          <CheckCircle2 size={18} className="text-emerald-400" />
+          <span className="text-sm font-medium tracking-wide">Reserved. Welcome to Solmae.</span>
+        </div>
+      )}
+
+      {/* GLOBAL STYLES */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+        
         .font-serif { font-family: 'Playfair Display', serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.5s ease-out forwards; }
         
-        /* Initial loading state to prevent flash */
-        #root:empty {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background: #fdfdfd;
+        @keyframes fade-in { 
+          from { opacity: 0; transform: translateY(10px); } 
+          to { opacity: 1; transform: translateY(0); } 
         }
-        #root:empty::after {
-            content: "SOLMAE";
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            letter-spacing: 0.2em;
-            color: #444;
-            animate: pulse 2s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-    </style>
-</head>
-<body class="bg-white">
-    <div id="root"></div>
+        .animate-in { animation: fade-in 0.5s ease-out forwards; }
+      `}</style>
+    </div>
+  );
+};
 
-    <script type="text/babel">
-        // Helper to get icons from the lucide global object
-        const Icon = ({ name, size = 24, className = "" }) => {
-            const LucideIcon = lucide[name];
-            if (!LucideIcon) return null;
-            return <LucideIcon size={size} className={className} />;
-        };
-
-        const App = () => {
-            const [isSubscribed, setIsSubscribed] = React.useState(false);
-            const [showToast, setShowToast] = React.useState(false);
-            const [menuOpen, setMenuOpen] = React.useState(false);
-
-            const handleSignup = (e) => {
-                if (e) e.preventDefault();
-                setIsSubscribed(true);
-                setShowToast(true);
-                setTimeout(() => setShowToast(false), 3000);
-            };
-
-            const experts = [
-                {
-                    name: "Dr. Elena Rossi",
-                    title: "Hormones & High Performance",
-                    category: "Biology",
-                    readTime: "4 min read",
-                    excerpt: "The cortisol-productivity loop for the modern executive. How perimenopause changes the leadership landscape.",
-                    image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=800"
-                },
-                {
-                    name: "Sienna Rivers",
-                    title: "The Silent Strategy of Breath",
-                    category: "Mindset",
-                    readTime: "6 min read",
-                    excerpt: "Mastering boardroom presence using physiological sighs. Why stillness is the ultimate power move.",
-                    image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=800"
-                }
-            ];
-
-            const selections = [
-                { name: "Ashwagandha Complex", brand: "Moon Juice", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400" },
-                { name: "Silk Sleep Mask", brand: "Lunya", image: "https://images.unsplash.com/photo-1583073037411-9669528f804e?auto=format&fit=crop&q=80&w=400" },
-                { name: "Ceremonial Matcha", brand: "Ippodo", image: "https://images.unsplash.com/photo-1582733315331-a941f515a1ec?auto=format&fit=crop&q=80&w=400" }
-            ];
-
-            return (
-                <div className="min-h-screen bg-white font-sans text-stone-900 overflow-x-hidden pb-24">
-                    
-                    {/* NAVIGATION */}
-                    <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-stone-100">
-                        <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
-                            <h1 className="text-xl font-serif tracking-tight text-stone-800 font-bold uppercase">SOLMAE</h1>
-                            <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-stone-500">
-                                {menuOpen ? <Icon name="X" /> : <Icon name="Menu" />}
-                            </button>
-                        </div>
-                    </nav>
-
-                    {/* MENU OVERLAY */}
-                    {menuOpen && (
-                        <div className="fixed inset-0 bg-stone-900/98 z-[60] flex flex-col items-center justify-center text-stone-50 gap-8 animate-in">
-                           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 p-2"><Icon name="X" size={32} /></button>
-                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Journal</a>
-                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Experiences</a>
-                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Collective</a>
-                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Curated Shop</a>
-                        </div>
-                    )}
-
-                    <main className="max-w-md mx-auto">
-                        
-                        {/* HERO SECTION */}
-                        <section className="pt-28 pb-12 px-6 bg-stone-50">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/50 text-stone-600 text-[10px] font-bold tracking-widest uppercase mb-4">
-                                <Icon name="Sparkles" size={12} />
-                                <span>Private Beta</span>
-                            </div>
-                            <h2 className="text-4xl font-serif text-stone-900 leading-[1.15] mb-4">
-                                The Modern Woman’s <br /><span className="italic text-stone-500 font-normal">Guide to Presence.</span>
-                            </h2>
-                            <p className="text-stone-600 text-lg leading-relaxed mb-8 font-light">
-                                Curated wisdom, elite community, and the science of wellness—tailored for leaders.
-                            </p>
-                            <button 
-                                onClick={handleSignup}
-                                className="w-full bg-stone-900 text-stone-50 py-4 rounded-xl font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-stone-200"
-                            >
-                                Join the Inner Circle <Icon name="ArrowRight" size={18} />
-                            </button>
-                        </section>
-
-                        {/* HORIZONTAL SELECTION */}
-                        <section className="py-12 pl-6 overflow-hidden">
-                            <div className="pr-6 flex items-center justify-between mb-6">
-                                <h3 className="text-xl font-serif font-semibold">The Selection</h3>
-                                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">Weekly Edit</span>
-                            </div>
-                            <div className="flex gap-4 overflow-x-auto pr-6 pb-4 no-scrollbar">
-                                {selections.map((item, i) => (
-                                    <div key={i} className="flex-shrink-0 w-64 bg-white border border-stone-100 rounded-2xl p-4 shadow-sm">
-                                        <div className="aspect-square bg-stone-50 rounded-xl mb-4 overflow-hidden">
-                                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                                        </div>
-                                        <h5 className="font-semibold text-stone-800 text-sm mb-1">{item.name}</h5>
-                                        <p className="text-stone-400 text-xs mb-4 uppercase tracking-tighter">{item.brand}</p>
-                                        <button className="w-full py-2.5 bg-stone-50 text-stone-900 text-[11px] font-bold rounded-lg border border-stone-200 uppercase tracking-widest">
-                                            View Detail
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        {/* EXPERT FEED */}
-                        <section className="py-12 px-6">
-                            <h3 className="text-xl font-serif font-semibold text-stone-900 mb-8">Expert Spotlight</h3>
-                            <div className="flex flex-col gap-12">
-                                {experts.map((expert, idx) => (
-                                    <div key={idx} className="flex flex-col gap-4">
-                                        <div className="aspect-[16/10] bg-stone-200 rounded-2xl overflow-hidden relative">
-                                            <img src={expert.image} alt={expert.name} className="w-full h-full object-cover" />
-                                            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">
-                                                {expert.category}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h4 className="text-xl font-serif font-semibold text-stone-800 mb-1">{expert.title}</h4>
-                                            <p className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">by {expert.name} • {expert.readTime}</p>
-                                            <p className="text-stone-600 text-sm leading-relaxed mb-4 font-light">{expert.excerpt}</p>
-                                            <div className="flex gap-6 text-stone-400">
-                                                <div className="flex items-center gap-1.5"><Icon name="Heart" size={18} /> <span className="text-xs">4.2k</span></div>
-                                                <div className="flex items-center gap-1.5"><Icon name="Share2" size={18} /> <span className="text-xs">Share</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-
-                        {/* RETREAT RSVP */}
-                        <section className="px-6 mb-12">
-                            <div className="bg-stone-900 rounded-[2rem] p-8 text-stone-50 relative overflow-hidden">
-                                <div className="relative z-10">
-                                    <Icon name="Calendar" size={20} className="text-stone-500 mb-4" />
-                                    <h3 className="text-2xl font-serif font-bold mb-3">Sonoma: The Clarity Retreat</h3>
-                                    <p className="text-stone-400 text-sm mb-8 leading-relaxed font-light">
-                                        An intimate 3-day immersion for female founders. Bio-optimization and terroir-based wellness.
-                                    </p>
-                                    <button onClick={handleSignup} className="w-full py-4 bg-white text-stone-900 rounded-xl font-bold text-xs uppercase tracking-widest shadow-xl">
-                                        Join Waitlist
-                                    </button>
-                                </div>
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-stone-800 rounded-full -mr-32 -mt-32 opacity-40 blur-[80px]"></div>
-                            </div>
-                        </section>
-
-                        {/* FOOTER */}
-                        <footer className="py-20 px-8 bg-stone-50 text-center">
-                            <h2 className="text-3xl font-serif mb-6 italic">Solmae</h2>
-                            <p className="text-stone-500 text-sm mb-10 font-light">Building a legacy of presence.</p>
-                            {!isSubscribed ? (
-                                <button onClick={handleSignup} className="px-10 py-4 bg-stone-900 text-white rounded-full text-xs font-bold uppercase tracking-widest">
-                                    Apply for Access
-                                </button>
-                            ) : (
-                                <p className="text-emerald-600 font-serif italic tracking-wide animate-in">Thank you. We'll be in touch.</p>
-                            )}
-                            <p className="mt-16 text-[9px] text-stone-400 tracking-[0.3em] uppercase font-bold">SOLMAE ENTERPRISES © 2024</p>
-                        </footer>
-                    </main>
-
-                    {/* BOTTOM NAV */}
-                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/90 backdrop-blur-xl border border-white/10 px-10 py-4 rounded-full shadow-2xl flex gap-12 text-stone-500 z-50">
-                        <Icon name="Compass" size={24} className="text-white" />
-                        <Icon name="Sparkles" size={24} />
-                        <Icon name="Users" size={24} />
-                    </div>
-
-                    {/* TOAST */}
-                    {showToast && (
-                        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-[100] animate-in">
-                            <Icon name="CheckCircle2" size={18} className="text-emerald-400" />
-                            <span className="text-sm font-medium tracking-wide">Reserved. Welcome to Solmae.</span>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
-</body>
-</html>
+export default App;
