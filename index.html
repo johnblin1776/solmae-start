@@ -7,7 +7,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- React & Babel for In-Browser Rendering -->
@@ -16,27 +16,47 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
+        body { font-family: 'Inter', sans-serif; }
         .font-serif { font-family: 'Playfair Display', serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-in { animation: fade-in 0.5s ease-out forwards; }
+        
+        /* Initial loading state to prevent flash */
+        #root:empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #fdfdfd;
+        }
+        #root:empty::after {
+            content: "SOLMAE";
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+            color: #444;
+            animate: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body class="bg-white">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { 
-            Compass, Sparkles, Users, ArrowRight, ChevronRight, 
-            Heart, Share2, Calendar, Star, Bell, CheckCircle2, Menu, X 
-        } = lucide;
+        // Helper to get icons from the lucide global object
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const LucideIcon = lucide[name];
+            if (!LucideIcon) return null;
+            return <LucideIcon size={size} className={className} />;
+        };
 
         const App = () => {
-            const [isSubscribed, setIsSubscribed] = useState(false);
-            const [showToast, setShowToast] = useState(false);
-            const [menuOpen, setMenuOpen] = useState(false);
+            const [isSubscribed, setIsSubscribed] = React.useState(false);
+            const [showToast, setShowToast] = React.useState(false);
+            const [menuOpen, setMenuOpen] = React.useState(false);
 
             const handleSignup = (e) => {
                 if (e) e.preventDefault();
@@ -76,21 +96,21 @@
                     {/* NAVIGATION */}
                     <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-stone-100">
                         <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
-                            <h1 className="text-2xl font-serif tracking-tight text-stone-800 font-bold uppercase">SOLMAE</h1>
+                            <h1 className="text-xl font-serif tracking-tight text-stone-800 font-bold uppercase">SOLMAE</h1>
                             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 text-stone-500">
-                                {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                                {menuOpen ? <Icon name="X" /> : <Icon name="Menu" />}
                             </button>
                         </div>
                     </nav>
 
                     {/* MENU OVERLAY */}
                     {menuOpen && (
-                        <div className="fixed inset-0 bg-stone-900/95 z-[60] flex flex-col items-center justify-center text-stone-50 gap-8 animate-in">
-                           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 p-2"><X size={32} /></button>
-                           <a href="#" className="text-3xl font-serif">The Journal</a>
-                           <a href="#" className="text-3xl font-serif">Experiences</a>
-                           <a href="#" className="text-3xl font-serif">The Collective</a>
-                           <a href="#" className="text-3xl font-serif">Curated Shop</a>
+                        <div className="fixed inset-0 bg-stone-900/98 z-[60] flex flex-col items-center justify-center text-stone-50 gap-8 animate-in">
+                           <button onClick={() => setMenuOpen(false)} className="absolute top-6 right-6 p-2"><Icon name="X" size={32} /></button>
+                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Journal</a>
+                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Experiences</a>
+                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">The Collective</a>
+                           <a href="#" className="text-3xl font-serif hover:text-stone-400 transition-colors">Curated Shop</a>
                         </div>
                     )}
 
@@ -99,10 +119,10 @@
                         {/* HERO SECTION */}
                         <section className="pt-28 pb-12 px-6 bg-stone-50">
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200/50 text-stone-600 text-[10px] font-bold tracking-widest uppercase mb-4">
-                                <Sparkles size={12} />
+                                <Icon name="Sparkles" size={12} />
                                 <span>Private Beta</span>
                             </div>
-                            <h2 className="text-4xl font-serif text-stone-900 leading-[1.1] mb-4">
+                            <h2 className="text-4xl font-serif text-stone-900 leading-[1.15] mb-4">
                                 The Modern Woman’s <br /><span className="italic text-stone-500 font-normal">Guide to Presence.</span>
                             </h2>
                             <p className="text-stone-600 text-lg leading-relaxed mb-8 font-light">
@@ -112,7 +132,7 @@
                                 onClick={handleSignup}
                                 className="w-full bg-stone-900 text-stone-50 py-4 rounded-xl font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-stone-200"
                             >
-                                Join the Inner Circle <ArrowRight size={18} />
+                                Join the Inner Circle <Icon name="ArrowRight" size={18} />
                             </button>
                         </section>
 
@@ -153,10 +173,10 @@
                                         <div>
                                             <h4 className="text-xl font-serif font-semibold text-stone-800 mb-1">{expert.title}</h4>
                                             <p className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">by {expert.name} • {expert.readTime}</p>
-                                            <p className="text-stone-600 text-sm leading-relaxed mb-4">{expert.excerpt}</p>
+                                            <p className="text-stone-600 text-sm leading-relaxed mb-4 font-light">{expert.excerpt}</p>
                                             <div className="flex gap-6 text-stone-400">
-                                                <div className="flex items-center gap-1.5"><Heart size={18} /> <span className="text-xs">4.2k</span></div>
-                                                <div className="flex items-center gap-1.5"><Share2 size={18} /> <span className="text-xs">Share</span></div>
+                                                <div className="flex items-center gap-1.5"><Icon name="Heart" size={18} /> <span className="text-xs">4.2k</span></div>
+                                                <div className="flex items-center gap-1.5"><Icon name="Share2" size={18} /> <span className="text-xs">Share</span></div>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +188,7 @@
                         <section className="px-6 mb-12">
                             <div className="bg-stone-900 rounded-[2rem] p-8 text-stone-50 relative overflow-hidden">
                                 <div className="relative z-10">
-                                    <Calendar size={20} className="text-stone-500 mb-4" />
+                                    <Icon name="Calendar" size={20} className="text-stone-500 mb-4" />
                                     <h3 className="text-2xl font-serif font-bold mb-3">Sonoma: The Clarity Retreat</h3>
                                     <p className="text-stone-400 text-sm mb-8 leading-relaxed font-light">
                                         An intimate 3-day immersion for female founders. Bio-optimization and terroir-based wellness.
@@ -198,15 +218,15 @@
 
                     {/* BOTTOM NAV */}
                     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/90 backdrop-blur-xl border border-white/10 px-10 py-4 rounded-full shadow-2xl flex gap-12 text-stone-500 z-50">
-                        <Compass size={24} className="text-white" />
-                        <Sparkles size={24} />
-                        <Users size={24} />
+                        <Icon name="Compass" size={24} className="text-white" />
+                        <Icon name="Sparkles" size={24} />
+                        <Icon name="Users" size={24} />
                     </div>
 
                     {/* TOAST */}
                     {showToast && (
                         <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 z-[100] animate-in">
-                            <CheckCircle2 size={18} className="text-emerald-400" />
+                            <Icon name="CheckCircle2" size={18} className="text-emerald-400" />
                             <span className="text-sm font-medium tracking-wide">Reserved. Welcome to Solmae.</span>
                         </div>
                     )}
